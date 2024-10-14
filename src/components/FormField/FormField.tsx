@@ -1,9 +1,11 @@
 import React from 'react';
+import styled from "styled-components";
 
 type FormFieldProps = {
     label?: string;
     type?: string; // Typ pola, domyślnie "text"
     value: string;
+    className?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
     placeholder?: string;
@@ -19,23 +21,36 @@ const FormField: React.FC<FormFieldProps> = ({
                                                  onInput,
                                                  placeholder,
                                                  name,
-                                                 required = false
+                                                 required = false,
+                                                 className
                                              }) => {
+    const FormFieldWrapper = styled.div`
+      padding: 0.4rem;
+      position: relative;
+      background-image: linear-gradient(#20aee3, #20aee3), linear-gradient(#bfbfbf, #bfbfbf);
+      background-size: 0 2px, 100% 1px;
+      background-position: center bottom, center calc(100% - 1px);
+      background-repeat: no-repeat;
+      transition: background-size 200ms linear;
+
+      &:focus-within {
+        background-size: 100% 2px, 100% 1px;
+      }
+
+    `;
+    const FormField = styled.input`
+      background: transparent;
+      border: none;
+      width: 100%;
+      outline: none;
+    `
     return (
-        <div className="form-field">
+        <FormFieldWrapper className={`form-field ${className}`}>
             {label && <label htmlFor={name}>{label}</label>}
-            <input
-                type={type}
-                id={name}
-                name={name}
-                value={value}
-                onChange={onChange}
-                onInput={onInput}
-                placeholder={placeholder}
-                required={required}
-                className="input-field"
-            />
-        </div>
+            <FormField type={type} value={value} onChange={onChange} onInput={onInput} required={required}>
+
+            </FormField>
+        </FormFieldWrapper>
     );
 };
 
