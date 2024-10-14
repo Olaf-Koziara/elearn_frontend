@@ -1,5 +1,6 @@
 import React from 'react';
-import "./Button.scss";
+import styled from 'styled-components';
+
 type ButtonProps = {
     label: string; // Tekst wyświetlany na przycisku
     type?: 'button' | 'submit' | 'reset'; // Typ przycisku
@@ -7,6 +8,23 @@ type ButtonProps = {
     disabled?: boolean; // Czy przycisk ma być wyłączony
     className?: string; // Dodatkowe klasy CSS
 };
+
+// Definicja stylowanego komponentu Button
+const StyledButton = styled.button<{ disabled: boolean }>`
+    padding: 10px 20px;
+    background-color: ${({ disabled }) => (disabled ? '#ccc' : '#007bff')};
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+    opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: ${({ disabled }) => (disabled ? '#ccc' : '#0056b3')};
+    }
+`;
 
 const Button: React.FC<ButtonProps> = ({
                                            label,
@@ -16,14 +34,14 @@ const Button: React.FC<ButtonProps> = ({
                                            className = '',
                                        }) => {
     return (
-        <button
+        <StyledButton
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`button ${className}`} // Domyślna klasa plus dodatkowe
+            className={className} // Możliwość dodania dodatkowych klas
         >
             {label}
-        </button>
+        </StyledButton>
     );
 };
 
