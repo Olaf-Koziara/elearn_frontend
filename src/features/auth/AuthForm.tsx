@@ -1,7 +1,10 @@
 import React, {ChangeEvent, FormEvent, useCallback, useState} from 'react';
 import FormField from "../../components/FormField/FormField";
 import Button from "../../components/Button/Button";
-import {useAuth} from "../../hooks/useAuth";
+import {useDispatch, useSelector} from "react-redux";
+import {loginUser} from "./authActions";
+import {useAppDispatch} from "../../store/store";
+import Error from "../../components/Error/Error";
 
 
 type AuthFormProps = {
@@ -15,19 +18,17 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
     const [confirmPassword, setConfirmPassword] = useState<string>('12olaf34');
     const [name, setName] = useState<string>('olaf');
     const [surname, setSurname] = useState<string>('koziara')
-    const {login, register} = useAuth();
 
+    const {loading, token, error, success} = useSelector(
+        (state: any) => state.auth
+    )
+    const dispatch = useAppDispatch();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Jeśli jest to rejestracja, przekazujemy confirmPassword, w przeciwnym razie tylko email i password
         if (type === "login") {
-            login(email, password).then(result => {
-                console.log(result)
-            }).catch(err => {
-                console.log(err)
-            })
+            dispatch(loginUser({email, password}))
         } else {
-            register(email, password, confirmPassword, name, surname)
         }
     };
 
@@ -35,6 +36,7 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
         <div className="row justify-content-center mt-5">
             <div className="col-md-3 text-center">
                 <h2>{type === 'login' ? 'Login' : 'Register'}</h2>
+                {error && <Error>{error}</Error>}
                 <form onSubmit={handleSubmit} className="row card pt-4 ">
 
                     <div className="col-md-12 pb-3">
