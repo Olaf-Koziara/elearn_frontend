@@ -8,15 +8,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 import {createBrowserRouter,RouterProvider} from "react-router-dom";
 import {routes} from "./routes/routes";
 
+import {Provider} from 'react-redux'
+import store from "./store/store";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+    document.getElementById('root') as HTMLElement
 );
 const router = createBrowserRouter(routes);
 root.render(
-  <React.StrictMode>
-   <RouterProvider router={router}/>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Provider store={store}><App/></Provider>
+
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
