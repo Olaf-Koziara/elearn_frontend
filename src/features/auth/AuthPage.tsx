@@ -1,6 +1,7 @@
-import React, {FormEvent} from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import AuthForm from './AuthForm';
+import React from 'react';
+import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
+import AuthForm from "./AuthForm";
+
 
 const AuthPage: React.FC = () => {
     const location = useLocation();
@@ -10,9 +11,10 @@ const AuthPage: React.FC = () => {
 
 
     return (
-        <div>
-            <AuthForm type={formType} />
-        </div>
+        <>
+            <AuthForm type={formType}/>
+        </>
+
     );
 };
 

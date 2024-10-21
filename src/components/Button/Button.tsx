@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import styled from 'styled-components';
 
 type ButtonProps = {
-    label: string; // Tekst wyświetlany na przycisku
+    label?: string,
     type?: 'button' | 'submit' | 'reset'; // Typ przycisku
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void; // Funkcja wywoływana przy kliknięciu
     disabled?: boolean; // Czy przycisk ma być wyłączony
-    className?: string; // Dodatkowe klasy CSS
+    className?: string; // Dodatkowe klasy CSS,
+    children?: ReactNode,
+    icon?: string
 };
 
 // Definicja stylowanego komponentu Button
@@ -28,11 +30,12 @@ const StyledButton = styled.button<{ disabled: boolean, type: string }>`
 `;
 
 const Button: React.FC<ButtonProps> = ({
-                                           label,
+                                           label = '',
                                            type = 'button', // Domyślny typ to 'button'
                                            onClick,
                                            disabled = false,
                                            className = '',
+                                           icon = '',
                                        }) => {
     return (
         <StyledButton
@@ -41,6 +44,7 @@ const Button: React.FC<ButtonProps> = ({
             disabled={disabled}
             className={className} // Możliwość dodania dodatkowych klas
         >
+            {icon && <i className={`bi bi-${icon}`}></i>}
             {label}
         </StyledButton>
     );

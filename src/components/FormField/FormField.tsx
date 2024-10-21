@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {forwardRef} from 'react';
 import styled from "styled-components";
 
 type FormFieldProps = {
     label?: string;
     type?: string; // Typ pola, domyślnie "text"
-    value?: string;
     className?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
@@ -15,16 +14,16 @@ type FormFieldProps = {
     outline?: boolean;
 };
 
-const FormField: React.FC<FormFieldProps> = ({
-                                                 label,
-                                                 type = 'text', // Domyślnie "text"
-                                                 placeholder,
-                                                 name,
-                                                 required = false,
-                                                 className,
-                                                 disabled = false,
-                                                 ...otherProps
-                                             }) => {
+const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement, FormFieldProps>(({
+                                                                                              label,
+                                                                                              type = 'text', // Domyślnie "text"
+                                                                                              placeholder,
+                                                                                              name,
+                                                                                              required = false,
+                                                                                              className,
+                                                                                              disabled = false,
+                                                                                              ...otherProps
+                                                                                          }, ref) => {
 
 
     return (
@@ -33,12 +32,14 @@ const FormField: React.FC<FormFieldProps> = ({
             <FormFieldStyled type={type}
                              required={required}
                              $disabled={disabled}
+                             name={name}
+                             ref={ref}
                              {...otherProps}>
-
             </FormFieldStyled>
         </FormFieldWrapper>
     );
-};
+
+});
 const FormFieldStyled = styled.input<{ $disabled?: boolean, $outline?: boolean }>`
   background: transparent;
   width: 100%;

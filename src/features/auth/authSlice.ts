@@ -1,9 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {loginUser, registerUser} from "./authActions";
 
+const userToken = localStorage.getItem('userToken');
 export const authSlice = createSlice({
     name: 'auth',
-    initialState: {token: '', loading: false, error: <string | undefined | null>'', success: false},
+    initialState: {token: userToken, loading: false, error: <string | undefined | null>'', success: false},
     reducers: {},
     extraReducers: (builder => {
         builder.addCase(registerUser.pending, (state => {
