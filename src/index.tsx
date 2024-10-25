@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {routes} from "./routes/routes";
+import {routes} from "./routing/routes";
 
 import {Provider} from 'react-redux'
 import store from "./store/store";

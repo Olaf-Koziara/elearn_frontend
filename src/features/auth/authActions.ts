@@ -1,13 +1,13 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
+import {UserModel} from "./userModel";
+import {useNavigate} from "react-router-dom";
 
 const API_URL = 'http://localhost:4000'; // URL Twojego API
 
 type AuthResponse = {
-    token: string;
-    user: {
-        id: string;
-        email: string;
-    };
+    success: boolean
+    token: string
+    user: UserModel
 };
 type ErrorResponse = {
     success: boolean;
@@ -51,6 +51,7 @@ export const loginUser = createAsyncThunk<AuthResponse, { email: string, passwor
                                                                                                                                                       email,
                                                                                                                                                       password
                                                                                                                                                   }, {rejectWithValue}) => {
+
 
     const response = await fetch(`${API_URL}/user/login`, {
         method: 'POST',

@@ -7,6 +7,7 @@ import {useAppDispatch} from "../../store/store";
 import Error from "../../components/Error/Error";
 import {SubmitHandler, useForm} from "react-hook-form";
 import Loader from "../../components/Loader/Loader";
+import {useNavigate} from "react-router-dom";
 
 
 type AuthFormProps = {
@@ -29,18 +30,19 @@ type LoginFormValues = {
 const AuthForm: React.FC<AuthFormProps> = ({type}) => {
     const {register, handleSubmit} = useForm<RegisterFormValues | LoginFormValues>();
 
-    const {loading, token, error, success} = useSelector(
+    const {loading, token, error, success, userInfo} = useSelector(
         (state: any) => state.auth
     )
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     useEffect(() => {
-        register('email')
+        if (userInfo) {
+            navigate('/')
+        }
+    }, [userInfo, navigate])
 
-    }, [])
     const onSubmit: SubmitHandler<RegisterFormValues | LoginFormValues> = (data: RegisterFormValues | LoginFormValues) => {
-        // Jeśli jest to rejestracja, przekazujemy confirmPassword, w przeciwnym razie tylko email i password
         if (type === "login") {
-            console.log(data)
             const formData = data as LoginFormValues;
             dispatch(loginUser({email: formData.email, password: formData.password}))
         } else {
