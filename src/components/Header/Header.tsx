@@ -1,17 +1,20 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {NavLink} from 'react-router-dom'
 import {useGetUserDetailsQuery} from "../../features/auth/authService";
 import {logout, setCredentials, SliceState} from "../../features/auth/authSlice";
+import "./Header.scss"
 
 const Header = () => {
     const {userInfo} = useSelector((state: { auth: SliceState }) => state.auth)
+    const [isUserInfoClicked, setIsUserInfoClicked] = useState(false);
     const dispatch = useDispatch()
 
     // automatically authenticate user if token is found
     const {data, isFetching} = useGetUserDetailsQuery('userDetails', {
-        pollingInterval: 900000, // 15mins
+        pollingInterval: 300000, // 15mins
     })
+
 
     useEffect(() => {
         if (data) dispatch(setCredentials(data))
@@ -19,34 +22,33 @@ const Header = () => {
 
     return (
         <header className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className='header-status'>
-        <span>
-          {isFetching
-              ? `Fetching your profile...`
-              : userInfo !== null
-                  ? `Logged in as ${userInfo.email}`
-                  : "You're not logged in"}
-        </span>
-                <div className='cta'>
-                    {userInfo ? (
-                        <button className='button' onClick={() => dispatch(logout())}>
-                            Logout
-                        </button>
-                    ) : (
-                        <NavLink className='button' to='/login'>
-                            Login
-                        </NavLink>
-                    )}
-                </div>
-            </div>
-            <nav className='container navigation'>
-                <NavLink to='/'>Home</NavLink>
+
+            <nav className='container navigation navbar-nav justify-content-end'>
+                <NavLink className="nav-link" to='/'>Home</NavLink>
                 {!userInfo && <>
-                    <NavLink to='/login'>Login</NavLink>
-                    <NavLink to='/register'>Register</NavLink>
+                    <NavLink className="nav-link" to='/register'>Register</NavLink>
                 </>
                 }
-                {userInfo && <NavLink to='/user-profile'>Profile</NavLink>}
+                <div className='header-user'>
+                    <i className='header-user_icon bi bi-person-circle' style={{fontSize: '1.5rem'}}
+                       onClick={() => setIsUserInfoClicked(!isUserInfoClicked)}
+                    ></i>
+                    <div className={`header-user_dropdown ${isUserInfoClicked ? 'open' : ''} card p-4`}>
+                        {userInfo ? (
+                            <>
+                                <span>{userInfo.email}</span>
+                                <NavLink className="btn btn-outline-primary mb-2" to='/user-profile'>Profile</NavLink>
+                                <button className='button btn btn-primary' onClick={() => dispatch(logout())}>
+                                    Logout
+                                </button>
+                            </>
+                        ) : (
+                            <NavLink className='button' to='/login'>
+                                Login
+                            </NavLink>
+                        )}
+                    </div>
+                </div>
             </nav>
         </header>
     )
