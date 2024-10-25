@@ -26,10 +26,8 @@ const Header = () => {
             <nav className='container navigation navbar-nav justify-content-between'>
                 <NavLink className="nav-link home-link" to='/'><i
                     className="bi bi-highlighter"></i>Dashboard</NavLink>
-                {!userInfo && <>
-                    <NavLink className="nav-link" to='/register'>Register</NavLink>
-                </>
-                }
+
+
                 <div className='header-user'>
                     <i className='header-user_icon bi bi-person-circle'
                        onClick={() => setIsUserInfoClicked(!isUserInfoClicked)}
@@ -44,9 +42,12 @@ const Header = () => {
                                 </button>
                             </>
                         ) : (
-                            <NavLink className='button' to='/login'>
-                                Login
-                            </NavLink>
+                            <>
+                                <NavLink className='btn btn-primary mb-2' to='/login'>
+                                    Login
+                                </NavLink>
+                                <NavLink className="btn btn-primary" to='/register'>Register</NavLink>
+                            </>
                         )}
                     </div>
                 </div>
