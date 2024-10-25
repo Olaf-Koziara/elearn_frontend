@@ -1,9 +1,21 @@
 .header {
+  .home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+
   &-user {
     position: relative;
 
     &_icon {
       cursor: pointer;
+      font-size: 1.8rem;
     }
 
     &_dropdown {
