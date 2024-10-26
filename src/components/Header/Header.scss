@@ -1,0 +1,35 @@
+.header {
+  .home-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+
+    i {
+      font-size: 1.8rem;
+    }
+  }
+
+  &-user {
+    position: relative;
+
+    &_icon {
+      cursor: pointer;
+      font-size: 1.8rem;
+    }
+
+    &_dropdown {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%) scaleY(0);
+      transition: 300ms ease-in-out;
+
+      &.open {
+        transform: translate(-50%, 100%) scaleY(1);
+
+      }
+    }
+  }
+
+}
