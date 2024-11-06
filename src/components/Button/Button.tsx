@@ -12,7 +12,7 @@ type ButtonProps = {
 };
 
 // Definicja stylowanego komponentu Button
-const StyledButton = styled.button<{ disabled: boolean, type: string }>`
+const StyledButton = React.memo(styled.button<{ disabled: boolean, type: string }>`
   padding: 10px 20px;
   background-color: ${({disabled}) => (disabled ? '#ccc' : '#007bff')};
   color: white;
@@ -27,7 +27,7 @@ const StyledButton = styled.button<{ disabled: boolean, type: string }>`
   &:hover {
     background-color: ${({disabled}) => (disabled ? '#ccc' : '#0056b3')};
   }
-`;
+`);
 
 const Button: React.FC<ButtonProps> = ({
                                            label = '',

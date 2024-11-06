@@ -1,0 +1,24 @@
+.editor-toolbar {
+  display: flex;
+
+  i {
+    font-size: 1.8rem;
+  }
+
+  &-add {
+    position: relative;
+
+    &_dropdown {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%) scaleY(0);
+      transition: 200ms ease-in-out;
+
+      &.open {
+        transform: translate(-50%, 100%) scaleY(1);
+
+      }
+    }
+  }
+}
