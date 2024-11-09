@@ -1,6 +1,6 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Routes, useLocation} from 'react-router-dom';
-import AuthForm from "./AuthForm";
+import AuthForm from "./components/AuthForm";
 
 
 const AuthPage: React.FC = () => {

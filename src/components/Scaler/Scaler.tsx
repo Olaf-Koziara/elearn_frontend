@@ -33,16 +33,14 @@ const Scaler = ({component}: propTypes) => {
             setWidth(calculatedWidth);
         }
     }, [scalerRef])
-    useEffect(() => {
 
-    })
 
     const handleMouseMoveImage = (e: MouseEvent, mousePosition: { x: number, y: number }, imagePosition: { x: number, y: number }) => {
         const calculatedPosition = {
             x: e.clientX - mousePosition.x + imagePosition.x,
             y: e.clientY - mousePosition.y + imagePosition.y
         }
-        if (scaleAreaElement && calculatedPosition.x > 0 && calculatedPosition.x < scaleAreaElement.offsetWidth && calculatedPosition.y > 0 && calculatedPosition.y < scaleAreaElement.offsetHeight) {
+        if (scaleAreaElement && calculatedPosition.x > 0 && calculatedPosition.x + width < scaleAreaElement.offsetWidth && calculatedPosition.y > 0 && calculatedPosition.y + height < scaleAreaElement.offsetHeight) {
             setPosition({x: calculatedPosition.x, y: calculatedPosition.y})
         }
 
@@ -57,6 +55,7 @@ const Scaler = ({component}: propTypes) => {
         setHeight(calculatedSize.height)
     }
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>, onMouseMove: (...args: any[]) => void) => {
+        e.stopPropagation();
         const mouseDownPosition = {
             x: e.clientX, y: e.clientY
         }

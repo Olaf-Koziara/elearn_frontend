@@ -1,5 +1,5 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {SliceState} from "./authSlice";
+import {BaseQueryError, BaseQueryMeta, createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {SliceState} from "../reducer/authSlice";
 
 export const authApi = createApi({
     reducerPath: 'authApi',
@@ -8,7 +8,7 @@ export const authApi = createApi({
         prepareHeaders: (headers, {getState}) => {
 
             const token = (getState() as { auth: SliceState }).auth.token;
-            console.log(token)
+
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
                 return headers;
@@ -21,7 +21,8 @@ export const authApi = createApi({
                 query: (arg: any) => ({
                     url: 'user/profile',
                     method: 'GET',
-                })
+                }),
+
             }
         )
     }),

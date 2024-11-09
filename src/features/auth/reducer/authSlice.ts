@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {loginUser, registerUser} from "./authActions";
-import {UserModel} from "./userModel";
+import {loginUser, registerUser} from "../actions/authActions";
+import {UserModel} from "../model/userModel";
 
 const userToken = localStorage.getItem('userToken');
 export type SliceState = { userInfo: UserModel | null, token: string | null, loading: boolean, error: string | undefined | null, success: boolean }

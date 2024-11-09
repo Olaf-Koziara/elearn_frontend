@@ -1,12 +1,12 @@
 import React, {useEffect} from 'react';
-import FormField from "../../components/FormField/FormField";
-import Button from "../../components/Button/Button";
+import FormField from "../../../components/FormField/FormField";
+import Button from "../../../components/Button/Button";
 import {useDispatch, useSelector} from "react-redux";
-import {loginUser, registerUser} from "./authActions";
-import {useAppDispatch} from "../../store/store";
-import Error from "../../components/Error/Error";
-import {SubmitHandler, useForm} from "react-hook-form";
-import Loader from "../../components/Loader/Loader";
+import {loginUser, registerUser} from "../actions/authActions";
+import {useAppDispatch} from "../../../store/store";
+import Error from "../../../components/Error/Error";
+import {SubmitErrorHandler, SubmitHandler, useForm} from "react-hook-form";
+import Loader from "../../../components/Loader/Loader";
 import {useNavigate} from "react-router-dom";
 
 
@@ -43,6 +43,7 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
 
     const onSubmit: SubmitHandler<RegisterFormValues | LoginFormValues> = (data: RegisterFormValues | LoginFormValues) => {
         if (type === "login") {
+            console.info('login')
             const formData = data as LoginFormValues;
             dispatch(loginUser({email: formData.email, password: formData.password}))
         } else {
@@ -56,6 +57,9 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
             }))
         }
     };
+    const onError: SubmitErrorHandler<RegisterFormValues | LoginFormValues> = (error) => {
+        console.error(error)
+    }
 
     return (
         <div className="row justify-content-center mt-5">
@@ -63,7 +67,7 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
                 <Loader isLoading={loading}></Loader>
                 <h2>{type === 'login' ? 'Login' : 'Register'}</h2>
                 {error && <Error>{error}</Error>}
-                <form onSubmit={handleSubmit(onSubmit)} className="row card pt-4 ">
+                <form onSubmit={handleSubmit(onSubmit, onError)} className="row card pt-4 ">
 
                     <div className="col-md-12 pb-3">
                         <FormField
@@ -107,7 +111,7 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
                         label={type === 'login' ? 'Login' : 'Register'}
                         type="submit"
                         className="auth-button"
-                    ></Button>
+                    >Submit</Button>
                 </form>
             </div>
         </div>
