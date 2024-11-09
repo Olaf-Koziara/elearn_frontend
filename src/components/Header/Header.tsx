@@ -6,14 +6,14 @@ import {logout, setCredentials, SliceState} from "../../features/auth/reducer/au
 import "./Header.scss"
 
 const Header = () => {
-    const {userInfo} = useSelector((state: { auth: SliceState }) => state.auth)
+    const {userInfo, token} = useSelector((state: { auth: SliceState }) => state.auth)
     const [isUserInfoClicked, setIsUserInfoClicked] = useState(false);
     const dispatch = useDispatch()
 
     // automatically authenticate user if token is found
     const {data, isFetching} = useGetUserDetailsQuery('userDetails', {
         pollingInterval: 300000, // 15mins
-        skip: !userInfo
+        skip: !token
     })
 
 
