@@ -6,6 +6,7 @@ import {CourseModel} from "../../models/courseModel";
 import {useSelector} from "react-redux";
 import Row from "../../../../components/Row/Row";
 import Column from "../../../../components/Column/Column";
+import Button from "../../../../components/Button/Button";
 
 const CourseForm = () => {
     const {userInfo} = useSelector((state: any) => state.auth);
@@ -16,12 +17,14 @@ const CourseForm = () => {
         data.createdAt = new Date().toString();
     }
     return (
-        <Row justifyContent="center">
+        <Row padding="t4" justifyContent="center">
             <Column size={5}>
+                <h2>Course</h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <FormField {...register('title')} >Tytuł</FormField>
-                    <FormField {...register('description')}/>
-                    <FormField type="file" {...register('thumbnail')} />
+                    <FormField {...register('title')} placeholder="Title"/>
+                    <FormField {...register('description')} type="textarea" placeholder="Description"/>
+                    <FormField type="file" {...register('thumbnail')} placeholder="Select thumbnail"/>
+                    <Button type="submit">Save</Button>
                 </form>
             </Column>
         </Row>
