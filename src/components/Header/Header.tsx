@@ -33,9 +33,11 @@ const Header = () => {
 
 
                 <div className='header-user'>
-                    <i className='header-user_icon bi bi-person-circle'
-                       onClick={() => setIsUserInfoClicked(!isUserInfoClicked)}
-                    ></i>
+                    <button className="header-user_button btn">
+                        <i className='header-user_icon bi bi-person-circle'
+                           onClick={() => setIsUserInfoClicked(!isUserInfoClicked)}
+                        ></i>
+                    </button>
                     <div className={`header-user_dropdown ${isUserInfoClicked ? 'open' : ''} card p-4`}>
                         {userInfo ? (
                             <>

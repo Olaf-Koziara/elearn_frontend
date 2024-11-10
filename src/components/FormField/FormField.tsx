@@ -1,4 +1,4 @@
-import React, {ForwardedRef, forwardRef, ReactNode} from 'react';
+import React, {ForwardedRef, forwardRef, ReactNode, useState} from 'react';
 import {InputStyled, TextAreaStyled, FormFieldLabelStyled} from './style';
 
 export type FormFieldType = 'text' | 'textarea' | 'file' | 'email' | 'password';
@@ -21,16 +21,31 @@ const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTe
                                                                                                                     className,
                                                                                                                     disabled = false,
                                                                                                                     children,
+                                                                                                                    onChange,
                                                                                                                     ...otherProps
                                                                                                                 }, ref) => {
+    const [value, setValue] = useState<string>('')
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        onChange && onChange(e);
+        if (type != 'file') {
+            setValue(e.target.value);
 
+        } else {
+            const targetFiles = (e.target as HTMLInputElement).files;
+            targetFiles && setValue(targetFiles[0].name);
+            otherProps.placeholder = value;
+        }
+
+    }
 
     return (
-        <FormFieldLabelStyled type={type} placeholder={type === 'file' ? otherProps.placeholder = "Select file" : ''}>
+        <FormFieldLabelStyled type={type}
+                              placeholder={type === 'file' ? value ? value : otherProps.placeholder = "Select file" : ''}>
             {children}
             {type === 'textarea' ?
                 <TextAreaStyled ref={ref as ForwardedRef<HTMLTextAreaElement>} disabled={disabled} {...otherProps}/> :
-                <InputStyled type={type} ref={ref as ForwardedRef<HTMLInputElement>} disabled={disabled}
+                <InputStyled type={type} onChange={handleChange} ref={ref as ForwardedRef<HTMLInputElement>}
+                             disabled={disabled}
                              required={required}   {...otherProps}/>}
         </FormFieldLabelStyled>
     );

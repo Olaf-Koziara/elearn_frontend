@@ -4,10 +4,10 @@ export interface CourseModel {
     _id?: string;
     title: string;
     description: string;
-    thumbnail?: string;
+    thumbnail?: FileList;
     author: string;
     createdAt: string;
-    slides: CourseSlideModel[],
+    slides?: CourseSlideModel[],
 
 
 }

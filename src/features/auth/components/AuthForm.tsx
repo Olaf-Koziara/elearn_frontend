@@ -108,10 +108,10 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
 
                     <Button
                         icon="door-open"
-                        label={type === 'login' ? 'Login' : 'Register'}
+
                         type="submit"
                         className="auth-button"
-                    >Submit</Button>
+                    >{type === 'login' ? 'Login' : 'Register'}</Button>
                 </form>
             </div>
         </div>
