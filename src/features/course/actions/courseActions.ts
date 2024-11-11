@@ -1,7 +1,9 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {CourseModel} from "../models/courseModel";
+import {useSelector} from "react-redux";
+import {SliceState} from "../../auth/reducer/authSlice";
 
-const API_URL = 'http://localhost:4000';
+const API_URL = process.env.REACT_APP_API_URL;
 export const uploadFiles = createAsyncThunk<void, File, { rejectValue: string }>('course/upload', async (file, {rejectWithValue}) => {
     try {
 
@@ -24,8 +26,16 @@ export const uploadFiles = createAsyncThunk<void, File, { rejectValue: string }>
         }
     }
 })
-export const createCourse = createAsyncThunk<void, FormData>('course/create', async (FormData) => {
-    const response = fetch(`${API_URL}/course/create`, {method: 'POST', headers: {}, body: FormData})
+export const createCourse = createAsyncThunk<CourseModel, FormData>('course/create', async (FormData) => {
+    const response = await fetch(`${API_URL}/course/create`, {method: 'POST', headers: {}, body: FormData})
+    const data = await response.json()
+    return data;
 
 
+})
+export const getCourses = createAsyncThunk<CourseModel[]>('course/get', async () => {
+    const token = localStorage.getItem('userToken');
+    const response = await fetch(`${API_URL}/course`, {method: 'GET', headers: {Authorization: `Bearer ${token}`}})
+    const data = await response.json();
+    return data;
 })

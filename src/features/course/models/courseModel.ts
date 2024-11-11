@@ -7,7 +7,7 @@ export interface CourseModel {
     thumbnail?: FileList;
     author: string;
     createdAt: string;
-    slides?: CourseSlideModel[],
+    slides: CourseSlideModel[],
 
 
 }

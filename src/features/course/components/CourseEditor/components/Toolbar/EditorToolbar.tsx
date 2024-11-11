@@ -1,17 +1,13 @@
 import React, {ChangeEvent, useState} from 'react';
 import './EditorToolbar.scss';
-import {useDispatch, useSelector} from "react-redux";
-import {addFile} from "../../reducer/editorItemSlice";
 
-const EditorToolbar = () => {
+const EditorToolbar = ({handleAddImageToSlide}: { handleAddImageToSlide: (imgSrc: string) => void }) => {
     const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false)
-    const files = useSelector((state: any) => state.editorItem.files);
-    const dispatch = useDispatch();
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = (e.target as HTMLInputElement).files?.item(0);
         if (file) {
             const fileUrl = window.URL.createObjectURL(file);
-            dispatch(addFile(fileUrl));
+            handleAddImageToSlide(fileUrl)
         }
     }
     return (

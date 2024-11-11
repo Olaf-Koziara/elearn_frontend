@@ -12,12 +12,25 @@ export const Card = styled.div`
   width: 100%;
   max-width: 400px; /* Maksymalna szerokość, którą możesz dostosować */
 
+  * {
+    text-decoration: none;
+  }
+
   &:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Większy cień przy najechaniu */
     transform: translateY(-4px); /* Lekki efekt unoszenia */
   }
 `;
+export const CardImage = styled.div<{ $aspectRatio?: number }>`
+  width: 100%;
+  aspect-ratio: ${({$aspectRatio}) => $aspectRatio};
 
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
 // Przykład nagłówka wewnątrz karty
 export const CardHeader = styled.h3`
   font-size: ${({theme}) => theme.typography.header};

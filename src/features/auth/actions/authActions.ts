@@ -2,8 +2,8 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {UserModel} from "../model/userModel";
 import {useNavigate} from "react-router-dom";
 
-const API_URL = 'http://localhost:4000';
-
+const API_URL = process.env.REACT_APP_API_URL;
+console.log(process.env)
 type AuthResponse = {
     success: boolean
     token: string
