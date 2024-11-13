@@ -1,11 +1,12 @@
 // Card.js
 import styled from 'styled-components';
+import theme from "../../style/theme";
 
-export const Card = styled.div`
+export const Card = styled.div<{ $spacing?: string }>`
   background-color: ${({theme}) => theme.colors.white};
   border-radius: ${({theme}) => theme.borderRadius};
   box-shadow: ${({theme}) => theme.boxShadow};
-  padding: 1.5rem;
+  padding: ${({theme, $spacing}) => $spacing ? theme.spacing[$spacing] : '1.5rem'};
   transition: box-shadow ${({theme}) => theme.transitions.default},
   transform ${({theme}) => theme.transitions.default};
   overflow: hidden;

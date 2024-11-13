@@ -5,7 +5,7 @@ export type FormFieldType = 'text' | 'textarea' | 'file' | 'email' | 'password';
 type FormFieldProps = {
     type?: FormFieldType; // Typ pola, domyślnie "text"
     className?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onInput?: (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     placeholder?: string;
     name?: string;
@@ -25,7 +25,7 @@ const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTe
                                                                                                                     ...otherProps
                                                                                                                 }, ref) => {
     const [value, setValue] = useState<string>('')
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange && onChange(e);
         if (type != 'file') {
             setValue(e.target.value);
@@ -41,7 +41,7 @@ const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTe
     return (
         <FormFieldLabelStyled type={type}
                               placeholder={type === 'file' ? value ? value : otherProps.placeholder = "Select file" : ''}>
-            {children}
+            {children ? children : type === 'file' ? <i className="bi bi-file-earmark-arrow-up-fill"></i> : ''}
             {type === 'textarea' ?
                 <TextAreaStyled ref={ref as ForwardedRef<HTMLTextAreaElement>} disabled={disabled} {...otherProps}/> :
                 <InputStyled type={type} onChange={handleChange} ref={ref as ForwardedRef<HTMLInputElement>}

@@ -53,6 +53,7 @@ const labelStyles = css`
 const fileLabelStyles = css<{ placeholder: string }>`
   display: flex;
   align-items: center;
+  gap: ${({theme}) => theme.spacing.sm};;
   padding: 0;
   margin: ${({theme}) => theme.spacing.xs};
   border: none;
@@ -68,21 +69,19 @@ const fileLabelStyles = css<{ placeholder: string }>`
     transition: ${({theme}) => theme.transitions.default};
   }
 
-  &:before {
-    content: '\\F357';
-    font-family: bootstrap-icons !important;
-    font-size: 2rem;
-    left: ${({theme}) => theme.spacing.sm};
-
-  }
 
   &:after {
     content: ${(props) => `'${props.placeholder}'` || ''};
+    text-wrap: nowrap;
   }
 
 
-  &:hover::before, &:hover::after {
+  &:hover::before, &:hover::after, &:hover > .bi {
     color: ${({theme}) => theme.colors.secondary};
+  }
+
+  .bi {
+    transition: ${({theme}) => theme.transitions.default};;
   }
 
 

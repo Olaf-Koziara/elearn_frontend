@@ -58,10 +58,10 @@ const outlineStyles = css`
 `;
 export type buttonVariant = 'primary' | 'secondary' | 'outline';
 // Button styled-component with variants
-export const StyledButton = styled.button<{ variant: buttonVariant }>`
+export const StyledButton = styled.button<{ $variant: buttonVariant }>`
   ${baseButtonStyles}
-  ${({variant}) => variant === 'primary' && primaryStyles}
-  ${({variant}) => variant === 'secondary' && secondaryStyles}
-  ${({variant}) => variant === 'outline' && outlineStyles}
+  ${({$variant}) => $variant === 'primary' && primaryStyles}
+  ${({$variant}) => $variant === 'secondary' && secondaryStyles}
+  ${({$variant}) => $variant === 'outline' && outlineStyles}
 `;
 

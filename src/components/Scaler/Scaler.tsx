@@ -13,13 +13,17 @@ import './Scaler.scss'
 
 interface propTypes {
     component: React.ReactElement
+    initialPosition?: { x: number, y: number }
+    initialSize?: { width: number, height: number };
+    onChange?: (position: { x: number, y: number }, size: { width: number, height: number }, id: string) => any;
+    id?: string;
 
 }
 
-const Scaler = ({component}: propTypes) => {
+const Scaler = ({component, initialPosition, initialSize, onChange, id}: propTypes) => {
     const [height, setHeight] = useState<number>(100)
     const [width, setWidth] = useState<number>(100)
-    const [position, setPosition] = useState<{ x: number, y: number }>({x: 0, y: 0})
+    const [position, setPosition] = useState<{ x: number, y: number }>()
     const [scaleAreaElement, setScaleAreaElement] = useState<HTMLElement | null>(null)
     const scalerRef = useRef<HTMLDivElement>(null);
     const calculateSizeOnInit = useCallback(() => {
@@ -36,12 +40,14 @@ const Scaler = ({component}: propTypes) => {
 
 
     const handleMouseMoveImage = (e: MouseEvent, mousePosition: { x: number, y: number }, imagePosition: { x: number, y: number }) => {
-        const calculatedPosition = {
-            x: e.clientX - mousePosition.x + imagePosition.x,
-            y: e.clientY - mousePosition.y + imagePosition.y
-        }
-        if (scaleAreaElement && calculatedPosition.x > 0 && calculatedPosition.x + width < scaleAreaElement.offsetWidth && calculatedPosition.y > 0 && calculatedPosition.y + height < scaleAreaElement.offsetHeight) {
-            setPosition({x: calculatedPosition.x, y: calculatedPosition.y})
+        if (e.buttons === 1) {
+            const calculatedPosition = {
+                x: e.clientX - mousePosition.x + imagePosition.x,
+                y: e.clientY - mousePosition.y + imagePosition.y
+            }
+            if (scaleAreaElement && calculatedPosition.x > 0 && calculatedPosition.x + width < scaleAreaElement.offsetWidth && calculatedPosition.y > 0 && calculatedPosition.y + height < scaleAreaElement.offsetHeight) {
+                setPosition({x: calculatedPosition.x, y: calculatedPosition.y})
+            }
         }
 
 
@@ -70,8 +76,12 @@ const Scaler = ({component}: propTypes) => {
         document.body.addEventListener('mousemove', handleMove)
         e.target.addEventListener('mouseup', e => {
             document.body.removeEventListener('mousemove', handleMove)
+            if (position) {
+                onChange && onChange(position, {width: width, height: height}, id ?? '')
+            }
         })
     }
+    const handleDOMElementLoaded = () => initialSize && initialSize.width > 0 && calculateSizeOnInit();
 
 
     return (
@@ -81,8 +91,8 @@ const Scaler = ({component}: propTypes) => {
             draggable="false"
             className="scaler"
             onMouseDown={(e) => handleMouseDown(e, handleMouseMoveImage)}
-            onLoad={calculateSizeOnInit} ref={scalerRef}
-            style={{left: position.x, top: position.y, width: width, height: height}}>
+            onLoad={handleDOMElementLoaded} ref={scalerRef}
+            style={{left: position ? position.x : 0, top: position ? position.y : 0, width: width, height: height}}>
             {component}
 
             <div onMouseDown={(e) => handleMouseDown(e, handleMouseMoveScaleImage)} className='scaler_scale'/>

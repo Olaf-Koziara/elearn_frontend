@@ -6,8 +6,9 @@ import {useSelector} from "react-redux";
 import Row from "../../../../components/Row/Row";
 import Column from "../../../../components/Column/Column";
 import Button from "../../../../components/Button/Button";
-import {createCourse, uploadFiles} from "../../actions/courseActions";
+import {createCourse,} from "../../actions/courseActions";
 import {useAppDispatch} from "../../../../store/store";
+
 
 const CourseForm = () => {
     const {userInfo} = useSelector((state: any) => state.auth);

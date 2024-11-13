@@ -1,23 +1,29 @@
 export interface CourseSlideModel {
-    id: string;
+    uid: string;
     title: string;
-    files: Array<CourseSlideFileModel>;
-    texts: Array<CourseSlideTextModel>;
+    elements: Array<CourseSlideElementImageModel | CourseSlideElementTextModel>; //
     duration: number;
+}
 
+export interface CourseSlideElementModel {
+    uid: string;
+    type: 'image' | 'text'
+    position: { x: number; y: number };
+    size: { width: number; height: number };
 
 }
 
-export interface CourseSlideTextModel {
-    id: string;
+export interface CourseSlideElementTextModel extends CourseSlideElementModel {
     content: string,
     fontSize: string,
-    positionX: string,
-    positionY: string
+    fontFamily: string,
+    color: string
 }
 
-export interface CourseSlideFileModel {
-    id: string;
-    fileUrl: string;
+export interface CourseSlideElementImageModel extends CourseSlideElementModel {
+    isUploaded?: boolean
+    url: string
 
 }
+
+export type CourseSlideElement = CourseSlideElementTextModel | CourseSlideElementImageModel;

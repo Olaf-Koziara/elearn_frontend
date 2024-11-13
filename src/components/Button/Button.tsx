@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
             onClick={onClick}
             disabled={disabled}
             className={className}
-            variant={variant}// Możliwość dodania dodatkowych klas
+            $variant={variant}// Możliwość dodania dodatkowych klas
         >
             {icon && <i className={`bi bi-${icon}`}></i>}
             {children}
