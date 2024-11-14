@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {CourseModel} from "../models/courseModel";
-import {createCourse, getCourses, uploadFilesWithIds} from "../actions/courseActions";
+import {createCourse, deleteCourseById, getCourseById, getCourses, uploadFilesWithIds} from "../actions/courseActions";
 import {CourseSlideModel} from "../models/courseSlideModel";
 
 export interface CourseState {
@@ -42,6 +42,13 @@ const courseSlice = createSlice({
             state.items = payload;
         })
         builder.addCase(uploadFilesWithIds.fulfilled, (state, {payload}) => {
+
+        })
+        builder.addCase(getCourseById.fulfilled, (state, {payload}) => {
+            console.log(payload)
+            state.items = state.items.map(item => item._id === payload._id ? payload : item);
+        })
+        builder.addCase(deleteCourseById.fulfilled, (state, {payload}) => {
 
         })
     })

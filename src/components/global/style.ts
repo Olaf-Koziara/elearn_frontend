@@ -77,3 +77,28 @@ export const DropdownLabelStyled = styled.div`
     }
   }
 `;
+export const ModalStyled = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  min-width: 160px;
+  min-height: 80px;
+  transform: translate(-50%, -50%);
+  box-shadow: ${({theme}) => theme.boxShadow};
+  background: ${({theme}) => theme.colors.secondary};
+  transition: ${({theme}) => theme.transitions.default};
+  display: flex;
+  flex-direction: column;
+
+  &.modal-enter {
+    opacity: 0;
+  }
+
+  &.modal-active {
+    opacity: 1;
+  }
+`
+export const ModalLabelStyled = styled.div`
+
+`
+export const ModalConfirmationWrapperStyled = styled.div``

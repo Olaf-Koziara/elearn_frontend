@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {Card, CardImage, CardHeader, CardText} from '../../../../components/Card/style';
 import {useAppDispatch} from "../../../../store/store";
-import {getCourses} from "../../actions/courseActions";
+import {getCourseById, getCourses} from "../../actions/courseActions";
 import {CourseListStyled} from "./style";
 import Row from "../../../../components/Row/Row";
 import Button from "../../../../components/Button/Button";
@@ -30,6 +30,7 @@ const CourseList = () => {
     useEffect(() => {
         dispatch(getCourses())
     }, [])
+
     return (
         <Row padding='t4' justifyContent={'center'}>
             <Column size={8}>
@@ -44,7 +45,8 @@ const CourseList = () => {
                         {items.map((course) => (
 
                             <Card key={course._id}>
-                                <Link to="/courses/edit" state={{id: course._id}}>
+                                <Link to="/courses/edit"
+                                      state={{id: course._id}}>
                                     {course.thumbnail &&
                                         <CardImage $aspectRatio={16 / 9}>
                                             <img src={course.thumbnail} alt={course.title}

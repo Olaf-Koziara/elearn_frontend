@@ -87,7 +87,33 @@ export const saveCourse = async (courseData: CourseModel): Promise<void> => {
         body: JSON.stringify(courseDataTemp),
     });
 }
+export const getCourseById = createAsyncThunk<CourseModel, string>('course/getById', async (courseId) => {
+    try {
+        const response = await fetch(`${API_URL}/course/${courseId}`, {
+            method: 'GET',
+        })
 
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.error(error)
+    }
+})
+export const deleteCourseById = createAsyncThunk<CourseModel, string>('course/deleteById', async (courseId) => {
+    try {
+        const token = localStorage.getItem('userToken');
+        const response = await fetch(`${API_URL}/course/${courseId}`, {
+            method: 'DELETE',
+            headers: {Authorization: `Bearer ${token}`}
+        });
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+
+    }
+})
 
 export const updateSlide = async (slideData: CourseSlideModel, courseId: string): Promise<any> => {
     try {

@@ -4,7 +4,7 @@ import {addSlide, CourseState, updateSlide} from '../../reducer/courseSlice';
 import Column from '../../../../components/Column/Column';
 import Row from '../../../../components/Row/Row';
 import {CourseModel} from '../../models/courseModel';
-import {Location, useLocation} from 'react-router-dom';
+import {Location, useLocation, useNavigate} from 'react-router-dom';
 import {useAppDispatch} from '../../../../store/store';
 import EditorToolbar from './components/Toolbar/EditorToolbar';
 import {CourseEditorWorkspace} from './style';
@@ -18,25 +18,44 @@ import {
     CourseSlideModel
 } from "../../models/courseSlideModel";
 import SlideElement from "./components/SlideElement/SlideElement";
-import {FileUploadResponse, saveCourse, UploadFile, uploadFilesWithIds} from "../../actions/courseActions";
+import {
+    deleteCourseById,
+    FileUploadResponse,
+    getCourseById,
+    saveCourse,
+    UploadFile,
+    uploadFilesWithIds
+} from "../../actions/courseActions";
+import {set} from "react-hook-form";
 
 const CourseEditor = () => {
     const location: Location = useLocation();
+    const navigate = useNavigate();
     const courseInEdit: CourseModel | null = useSelector((state: { course: CourseState }) =>
         state.course.items.find((item) => item._id === location?.state.id) ?? null
     );
     const dispatch = useAppDispatch();
     const [slideInEditIndex, setSlideInEditIndex] = useState<number>(0);
+    const [isChangingSlide, setIsChangingSlide] = useState(false);
     const [slideInEdit, setSlideInEdit] = useState<CourseSlideModel | undefined>();
     const editorWorkspaceRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (courseInEdit) {
-            setSlideInEdit(courseInEdit.slides[slideInEditIndex]);
+            dispatch(getCourseById(courseInEdit._id)).then(() => {
+                setSlideInEdit(courseInEdit.slides[slideInEditIndex]);
+                setIsChangingSlide(true);
+            })
+
+
         }
     }, []);
 
     useEffect(() => {
+        if (isChangingSlide) {
+            setIsChangingSlide(false);
+            return;
+        }
         if (courseInEdit && slideInEdit) {
             dispatch(updateSlide({slide: slideInEdit, courseId: courseInEdit._id}));
         }
@@ -44,11 +63,9 @@ const CourseEditor = () => {
 
     const handleSlideChange = (index: number) => {
         if (courseInEdit) {
-            if (slideInEdit) {
-                dispatch(updateSlide({slide: slideInEdit, courseId: courseInEdit._id}));
-            }
             setSlideInEdit(courseInEdit.slides[index]);
             setSlideInEditIndex(index);
+            setIsChangingSlide(true);
         }
     };
 
@@ -103,8 +120,13 @@ const CourseEditor = () => {
     };
     const handleCourseSave = async () => {
         if (courseInEdit) {
-            saveCourse(courseInEdit)
+            await saveCourse(courseInEdit)
         }
+    }
+    const handleCourseDelete = (courseId: string) => {
+        dispatch(deleteCourseById(courseId));
+        navigate('/courses')
+
     }
 
     return (
@@ -117,7 +139,7 @@ const CourseEditor = () => {
                                 <CourseEditorWorkspace
                                     ref={editorWorkspaceRef}
                                     onDragOver={(e: DragEvent<HTMLDivElement>) => e.preventDefault()}>
-                                    {slideInEdit?.elements.map((element) => (
+                                    {slideInEdit?.elements && slideInEdit.elements.map((element) => (
                                         <Draggable
                                             key={element.uid}
                                             id={element.uid}
@@ -137,6 +159,8 @@ const CourseEditor = () => {
                             <EditorToolbar
                                 handleAddElementToSlide={handleAddElementToSlide}
                                 handleCourseSave={handleCourseSave}
+                                handleCourseDelete={courseInEdit ? () => handleCourseDelete(courseInEdit?._id) : undefined}
+
                             />
                         </div>
                     </Column>

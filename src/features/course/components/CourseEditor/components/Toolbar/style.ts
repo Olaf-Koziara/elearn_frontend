@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const EditorToolbarWrapper = styled.div`
-  padding-top: ${({theme}) => theme.spacing.sm};;
+  padding-top: ${({theme}) => theme.spacing.sm};
   display: flex;
   justify-content: space-between;
 `;
@@ -15,7 +15,8 @@ export const EditorToolbarLeftSide = styled.div`
   }
 `;
 export const EditorToolbarRightSide = styled.div`
-
+  display: flex;
+  gap: ${({theme}) => theme.spacing.sm};
 `;
 
 

@@ -1,7 +1,7 @@
 import React, {ForwardedRef, forwardRef, ReactNode, useState} from 'react';
 import {InputStyled, TextAreaStyled, FormFieldLabelStyled} from './style';
 
-export type FormFieldType = 'text' | 'textarea' | 'file' | 'email' | 'password';
+export type FormFieldType = 'text' | 'textarea' | 'file' | 'email' | 'password' | 'number';
 type FormFieldProps = {
     type?: FormFieldType; // Typ pola, domyślnie "text"
     className?: string;
@@ -12,6 +12,9 @@ type FormFieldProps = {
     required?: boolean;
     disabled?: boolean;
     outline?: boolean;
+    min?: string | number;
+    max?: string | number;
+    value?: any;
     children?: ReactNode
 };
 
@@ -22,6 +25,8 @@ const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTe
                                                                                                                     disabled = false,
                                                                                                                     children,
                                                                                                                     onChange,
+                                                                                                                    max,
+                                                                                                                    min,
                                                                                                                     ...otherProps
                                                                                                                 }, ref) => {
     const [value, setValue] = useState<string>('')
@@ -46,7 +51,8 @@ const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTe
                 <TextAreaStyled ref={ref as ForwardedRef<HTMLTextAreaElement>} disabled={disabled} {...otherProps}/> :
                 <InputStyled type={type} onChange={handleChange} ref={ref as ForwardedRef<HTMLInputElement>}
                              disabled={disabled}
-                             required={required}   {...otherProps}/>}
+                             required={required} min={type === 'number' ? min : undefined}
+                             max={type === 'number' ? max : undefined}    {...otherProps}/>}
         </FormFieldLabelStyled>
     );
 

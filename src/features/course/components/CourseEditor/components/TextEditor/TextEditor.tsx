@@ -3,6 +3,7 @@ import {EditorContainer} from './style';
 
 import {uid} from "uid";
 import {CourseSlideElementModel, CourseSlideElementTextModel} from "../../../../models/courseSlideModel";
+import FormField from "../../../../../../components/FormField/FormField";
 
 
 interface TextEditorProps {
@@ -51,7 +52,7 @@ const TextEditor: React.FC<TextEditorProps> = ({handleAddElementToSlide}) => {
             </label>
             <label>
                 Font Size:
-                <input
+                <FormField
                     type="number"
                     min="10"
                     max="100"

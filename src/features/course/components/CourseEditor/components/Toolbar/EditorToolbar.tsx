@@ -4,7 +4,7 @@ import {uid} from 'uid';
 import TextEditor from '../TextEditor/TextEditor';
 import {EditorToolbarLeftSide, EditorToolbarRightSide, EditorToolbarWrapper} from './style';
 import {RelativeWrapper} from '../../../../../../components/global/style';
-import {Dropdown} from '../../../../../../components/global';
+import {Dropdown, Modal} from '../../../../../../components/global';
 import {
     CourseSlideElement,
     CourseSlideElementImageModel,
@@ -16,9 +16,10 @@ import Button from "../../../../../../components/Button/Button";
 interface EditorToolbarProps {
     handleAddElementToSlide: (item: CourseSlideElement) => void;
     handleCourseSave: () => void;
+    handleCourseDelete?: (courseId?: string) => void;
 }
 
-const EditorToolbar = ({handleAddElementToSlide, handleCourseSave}: EditorToolbarProps) => {
+const EditorToolbar = ({handleAddElementToSlide, handleCourseSave, handleCourseDelete}: EditorToolbarProps) => {
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +56,9 @@ const EditorToolbar = ({handleAddElementToSlide, handleCourseSave}: EditorToolba
             <EditorToolbarRightSide>
                 <Button onClick={handleCourseSave}>Save</Button>
 
+                <Modal onConfirmation={handleCourseDelete} label={<Button>Delete</Button>}>
+                    <h4>Confirm course delete</h4>
+                </Modal>
             </EditorToolbarRightSide>
         </EditorToolbarWrapper>
     );
