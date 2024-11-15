@@ -1,68 +1,61 @@
-import React, {forwardRef} from 'react';
-import styled from "styled-components";
+import React, {ForwardedRef, forwardRef, ReactNode, useState} from 'react';
+import {InputStyled, TextAreaStyled, FormFieldLabelStyled} from './style';
 
+export type FormFieldType = 'text' | 'textarea' | 'file' | 'email' | 'password' | 'number';
 type FormFieldProps = {
-    label?: string;
-    type?: string; // Typ pola, domyślnie "text"
+    type?: FormFieldType; // Typ pola, domyślnie "text"
     className?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onInput?: (e: React.FormEvent<HTMLInputElement>) => void;
+    onInput?: (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     placeholder?: string;
     name?: string;
     required?: boolean;
     disabled?: boolean;
     outline?: boolean;
+    min?: string | number;
+    max?: string | number;
+    value?: any;
+    children?: ReactNode
 };
 
-const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement, FormFieldProps>(({
-                                                                                              label,
-                                                                                              type = 'text', // Domyślnie "text"
-                                                                                              placeholder,
-                                                                                              name,
-                                                                                              required = false,
-                                                                                              className,
-                                                                                              disabled = false,
-                                                                                              ...otherProps
-                                                                                          }, ref) => {
+const FormField: React.FC<FormFieldProps> = forwardRef<HTMLInputElement | HTMLTextAreaElement, FormFieldProps>(({
+                                                                                                                    type = 'text', // Domyślnie "text"
+                                                                                                                    required = false,
+                                                                                                                    className,
+                                                                                                                    disabled = false,
+                                                                                                                    children,
+                                                                                                                    onChange,
+                                                                                                                    max,
+                                                                                                                    min,
+                                                                                                                    ...otherProps
+                                                                                                                }, ref) => {
+    const [value, setValue] = useState<string>('')
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        onChange && onChange(e);
+        if (type != 'file') {
+            setValue(e.target.value);
 
+        } else {
+            const targetFiles = (e.target as HTMLInputElement).files;
+            targetFiles && setValue(targetFiles[0].name);
+            otherProps.placeholder = value;
+        }
+
+    }
 
     return (
-        <FormFieldWrapper className={`form-field ${className}`} $disabled={disabled}>
-            {label && <label htmlFor={name}>{label}</label>}
-            <FormFieldStyled type={type}
-                             required={required}
-                             $disabled={disabled}
-                             name={name}
-                             ref={ref}
-                             {...otherProps}>
-            </FormFieldStyled>
-        </FormFieldWrapper>
+        <FormFieldLabelStyled type={type}
+                              placeholder={type === 'file' ? value ? value : otherProps.placeholder = "Select file" : ''}>
+            {children ? children : type === 'file' ? <i className="bi bi-file-earmark-arrow-up-fill"></i> : ''}
+            {type === 'textarea' ?
+                <TextAreaStyled ref={ref as ForwardedRef<HTMLTextAreaElement>} disabled={disabled} {...otherProps}/> :
+                <InputStyled type={type} onChange={handleChange} ref={ref as ForwardedRef<HTMLInputElement>}
+                             disabled={disabled}
+                             required={required} min={type === 'number' ? min : undefined}
+                             max={type === 'number' ? max : undefined}    {...otherProps}/>}
+        </FormFieldLabelStyled>
     );
 
 });
-const FormFieldStyled = styled.input<{ $disabled?: boolean, $outline?: boolean }>`
-  background: transparent;
-  width: 100%;
-  outline: none;
-  cursor: ${(props) => props.$disabled ? 'default' : 'auto'};
-  pointer-events: ${(props) => props.$disabled ? 'none' : 'all'};
-  border: none`
-const FormFieldWrapper = styled.div<{ $disabled?: boolean }>`
-  padding: 0.4rem 0.8rem;
-  position: relative;
-  background-image: ${(props) => props.$disabled ? 'linear-gradient(rgba(230, 230, 230, 0.3),rgba(230, 230, 230, 0.3))' : `linear-gradient(#20aee3, #20aee3), linear-gradient(#bfbfbf, #bfbfbf)`};
-  background-size: ${(props) => props.$disabled ? '100% 100%' : '0 2px, 0 1px'};
-  background-position: ${(props) => props.$disabled ? 'left bottom' : 'center bottom, center calc(100% - 1px)'};
-  background-repeat: no-repeat;
-  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
-  border-radius: 20px;
-  transition: background-size 200ms linear;
 
-
-  &:focus-within {
-    background-size: 100% 1px, 100% 1px;
-  }
-
-`;
 export default FormField;

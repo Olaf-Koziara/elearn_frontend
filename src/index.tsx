@@ -10,6 +10,8 @@ import {routes} from "./routing/routes";
 
 import {Provider} from 'react-redux'
 import store from "./store/store";
+import {ThemeProvider} from "styled-components";
+import theme from "./style/theme";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -18,7 +20,9 @@ const router = createBrowserRouter(routes);
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RouterProvider router={router}/>
+            <ThemeProvider theme={theme}>
+                <RouterProvider router={router}/>
+            </ThemeProvider>
         </Provider>
     </React.StrictMode>
 );

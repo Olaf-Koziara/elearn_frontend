@@ -13,6 +13,12 @@
   &-user {
     position: relative;
 
+    &_button {
+      &:active {
+        background-color: #00B7FF;
+      }
+    }
+
     &_icon {
       cursor: pointer;
       font-size: 1.8rem;
