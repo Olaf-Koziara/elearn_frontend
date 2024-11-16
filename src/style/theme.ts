@@ -1,11 +1,13 @@
 const theme = {
     colors: {
-        primary: '#1D1D1F',      // Ciemnoszary dla głównego tekstu
+        primary: '#1D1D1F',
+        primaryTransparent: 'rgba(29,29,31,0.65)', // Ciemnoszary dla głównego tekstu
         secondary: '#6E6E73',    // Jasnoszary na mniej ważne elementy tekstowe
         background: '#F5F5F7',   // Bardzo jasny szary na tło
         white: '#FFFFFF',        // Czysta biel na karty i modalne okna
         accent: '#0071E3',       // Niebieski akcent dla przycisków i linków
-        border: '#D2D2D7',       // Kolor obramowań i linii rozdzielających
+        border: '#D2D2D7',
+        danger: '#ff3b30',// Kolor obramowań i linii rozdzielających
     },
     typography: {
         fontFamily: '"San Francisco", Arial, sans-serif',
@@ -22,7 +24,7 @@ const theme = {
     borderRadius: '12px',      // Zaokrąglenie dla eleganckiego wyglądu
     boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)', // Delikatny cień
     transitions: {
-        default: '0.3s ease',    // Płynne przejścia
+        default: '0.2s ease',    // Płynne przejścia
     },
     breakpoints: {
         mobile: '768px'
