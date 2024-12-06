@@ -5,7 +5,8 @@ import {
     DropdownLabelStyled,
     ModalStyled,
     ModalLabelStyled,
-    ModalConfirmationWrapperStyled
+    ModalConfirmationWrapperStyled,
+    ModalWrapperStyled
 } from './style';
 import Button from "../Button/Button";
 import {CSSTransition} from 'react-transition-group';
@@ -64,11 +65,12 @@ export const Dropdown = ({isOpen, children, label, direction}: DropdownProps) =>
 interface ModalProps {
     children: ReactNode;
     label: ReactNode;
+    withBackground?: boolean;
     onConfirmation?: (...args: any) => void;
     onRejection?: (...args: any) => void;
 }
 
-export const Modal = ({children, label, onConfirmation, onRejection}: ModalProps) => {
+export const Modal = ({children, label, onConfirmation, onRejection, withBackground = false}: ModalProps) => {
     const nodeRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
@@ -79,20 +81,27 @@ export const Modal = ({children, label, onConfirmation, onRejection}: ModalProps
         }
         return document.removeEventListener('click', handleModalClose);
     }, [isOpen])
+    const renderModalContent = () => (<ModalStyled ref={nodeRef}>
+        {children}
+        {(onConfirmation || onRejection) &&
+            <ModalConfirmationWrapperStyled>
+                <Button size={'sm'} onClick={onConfirmation}>Confirm</Button>
+                <Button size={'sm'} onClick={onRejection}>Reject</Button>
+            </ModalConfirmationWrapperStyled>}
+    </ModalStyled>)
+
+
     const handleModalClose = () => setIsOpen(false);
     return (
         <ModalLabelStyled onClick={() => setIsOpen(true)}>
             {label}
             {isOpen &&
                 <CSSTransition nodeRef={nodeRef} in={isOpen} timeout={200} classNames="modal">
-                    <ModalStyled ref={nodeRef}>
-                        {children}
-                        {(onConfirmation || onRejection) &&
-                            <ModalConfirmationWrapperStyled>
-                                <Button onClick={onConfirmation}>Confirm</Button>
-                                <Button onClick={onRejection}>Reject</Button>
-                            </ModalConfirmationWrapperStyled>}
-                    </ModalStyled>
+                    {withBackground ?
+                        <ModalWrapperStyled>
+                            {renderModalContent()}
+                        </ModalWrapperStyled> : renderModalContent()}
+
                 </CSSTransition>
             }
         </ModalLabelStyled>
