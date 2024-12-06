@@ -5,11 +5,11 @@ interface DraggableProps {
     children: ReactNode;
     onPositionChange?: (position: { x: number; y: number }) => any;
     onSizeChange?: (size: { width: number; height: number }) => any;
-    id: string;
     initialPosition?: { x: number, y: number }
     initialSize?: { width: number, height: number };
     resizeable?: boolean;
     parentRef?: React.RefObject<HTMLDivElement>
+
 }
 
 
@@ -17,14 +17,15 @@ const Draggable: React.FC<DraggableProps> = ({
                                                  children,
                                                  onPositionChange,
                                                  onSizeChange,
-                                                 id,
                                                  initialPosition,
                                                  initialSize,
                                                  resizeable,
-                                                 parentRef
+                                                 parentRef,
+
                                              }) => {
-    const [position, setPosition] = useState<{ x: number; y: number }>({x: 0, y: 0});
-    const [size, setSize] = useState<{ width: number; height: number }>({width: 200, height: 100});
+    const [position, setPosition] = useState<{ x: number; y: number }>(initialPosition ?? {x: 0, y: 0});
+    const [size, setSize] = useState<{ width: number; height: number }>(initialSize ?? {width: 200, height: 100});
+    const draggableRef = useRef<HTMLDivElement>(null);
     const [parentSize, setParentSize] = useState<{ width: number; height: number }>({width: 0, height: 0});
     const isDragging = useRef<boolean>(false);
     const isResizing = useRef<boolean>(false);
@@ -35,9 +36,12 @@ const Draggable: React.FC<DraggableProps> = ({
             const parentRect = parentRef.current?.getBoundingClientRect();
             parentRect && setParentSize({width: parentRect.width, height: parentRect.height});
         }
-        initialPosition && setPosition(initialPosition);
-        initialSize && setSize(initialSize);
 
+    }, [])
+    useEffect(() => {
+        if (!initialSize && draggableRef.current) {
+            setSize({width: draggableRef.current.offsetWidth, height: draggableRef.current.offsetHeight});
+        }
     }, [])
 
     const handleMouseDownDrag = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -126,19 +130,20 @@ const Draggable: React.FC<DraggableProps> = ({
 
     };
 
+
     return (
         <div
 
             onMouseDown={handleMouseDownDrag}
             onMouseUp={handleMouseUp}
             className="draggable"
-
+            ref={draggableRef}
             style={{
                 position: 'absolute',
                 left: `${position.x}px`,
                 top: `${position.y}px`,
-                width: `${size.width}px`,
-                height: `${size.height}px`,
+                width: `${resizeable ? `${size.width}px` : ''}`,
+                height: `${resizeable ? `${size.height}px` : ''}`,
                 cursor: isDragging ? 'grabbing' : 'grab',
 
             }}
