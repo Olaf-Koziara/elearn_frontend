@@ -3,8 +3,8 @@ import {loginUser, registerUser} from "../actions/authActions";
 import {UserModel} from "../model/userModel";
 
 const userToken = localStorage.getItem('userToken');
-export type SliceState = { userInfo: UserModel | null, token: string | null, loading: boolean, error: string | undefined | null, success: boolean }
-const initialState: SliceState = {
+export type AuthState = { userInfo: UserModel | null, token: string | null, loading: boolean, error: string | undefined | null, success: boolean }
+const initialState: AuthState = {
     userInfo: null,
     token: userToken,
     loading: false,
@@ -23,6 +23,9 @@ export const authSlice = createSlice({
         setCredentials: (state, {payload}) => {
             state.userInfo = payload
         },
+        setToken: (state, {payload}) => {
+            state.token = payload
+        }
     },
     extraReducers: (builder => {
         builder.addCase(registerUser.pending, (state => {
@@ -57,5 +60,5 @@ export const authSlice = createSlice({
     })
 
 })
-export const {logout, setCredentials} = authSlice.actions;
+export const {logout, setCredentials, setToken} = authSlice.actions;
 export default authSlice.reducer;
