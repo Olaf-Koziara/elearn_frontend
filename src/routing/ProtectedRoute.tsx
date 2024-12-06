@@ -1,21 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {ReactNode, useEffect} from 'react';
 import {useSelector} from "react-redux";
-import {NavLink, Outlet} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
+import {AuthState} from "../features/auth/reducer/authSlice";
 
 const ProtectedRoute = () => {
-    const {userInfo} = useSelector(
-        (state: any) => state.auth
-    )
+    const {userInfo} = useSelector((state: { auth: AuthState }) => state.auth)
 
-    if (!userInfo) return (<div className='unauthorized'>
-        <h1>Unauthorized :(</h1>
-        <span>
-          <NavLink to='/login'>Login</NavLink> to gain access
-        </span>
-    </div>)
-    return <Outlet></Outlet>
+    return (userInfo != null ? <Outlet></Outlet> : <Navigate to={'/login'}/>)
 
-
-};
-
+}
 export default ProtectedRoute;
