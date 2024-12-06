@@ -1,9 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {CourseModel} from "../models/courseModel";
-import {useSelector} from "react-redux";
-import {SliceState} from "../../auth/reducer/authSlice";
 import {CourseSlideElementImageModel, CourseSlideModel} from "../models/courseSlideModel";
-import slideElement from "../components/CourseEditor/components/SlideElement/SlideElement";
+import {CourseState} from "../reducer/courseSlice";
 
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -48,45 +46,57 @@ const uploadFiles = async (files: UploadFile[]) => {
 
     }
 }
-export const saveCourse = async (courseData: CourseModel): Promise<void> => {
-    const filesToUpload: UploadFile[] = [];
-    let courseDataTemp: CourseModel = {...courseData}
-    for (const slide of courseData.slides) {
-        for (const element of slide.elements) {
-            if (element.type === 'image') {
-                const imageElement = element as CourseSlideElementImageModel;
-                if (imageElement.url.startsWith('blob:')) { // Sprawdzenie, czy to lokalny plik
-                    filesToUpload.push({
-                        id: imageElement.uid,
-                        file: new File(
-                            [await fetch(imageElement.url).then(res => res.blob())],
-                            `image-${imageElement.uid}.png`
-                        ),
-                    });
+export const saveCourse = createAsyncThunk<void, undefined>('course/save', async (_, {getState}) => {
+    const state = getState() as { course: CourseState };
+    const {courseInEdit} = state.course;
+
+    try {
+        if (courseInEdit) {
+            const filesToUpload: UploadFile[] = [];
+            let courseInEditTemp: CourseModel = {...courseInEdit}
+            for (const slide of courseInEdit.slides) {
+                for (const element of slide.elements) {
+                    if (element.type === 'image') {
+                        const imageElement = element as CourseSlideElementImageModel;
+                        if (imageElement.url.startsWith('blob:')) { // Sprawdzenie, czy to lokalny plik
+                            filesToUpload.push({
+                                id: imageElement.uid,
+                                file: new File(
+                                    [await fetch(imageElement.url).then(res => res.blob())],
+                                    `image-${imageElement.uid}.png`
+                                ),
+                            });
+                        }
+                    }
                 }
             }
-        }
-    }
-    const uploadedFiles = filesToUpload.length > 0 ? await uploadFiles(filesToUpload) : [];
-    uploadedFiles.forEach(({id, url}: { id: string, url: string }) => {
-        courseDataTemp.slides = courseDataTemp.slides.map(slide => {
-            const slideCopy = {...slide}
-            slideCopy.elements = slideCopy.elements.map(element => {
-                let elementCopy = {...element}
-                if (element.type === 'image' && element.uid === id) {
-                    (elementCopy as CourseSlideElementImageModel).url = url;
-                }
-                return elementCopy;
+            const uploadedFiles = filesToUpload.length > 0 ? await uploadFiles(filesToUpload) : [];
+            uploadedFiles.forEach(({id, url}: { id: string, url: string }) => {
+                courseInEditTemp.slides = courseInEditTemp.slides.map(slide => {
+                    const slideCopy = {...slide}
+                    slideCopy.elements = slideCopy.elements.map(element => {
+                        let elementCopy = {...element}
+                        if (element.type === 'image' && element.uid === id) {
+                            (elementCopy as CourseSlideElementImageModel).url = url;
+                        }
+                        return elementCopy;
+                    });
+                    return slideCopy;
+                });
             });
-            return slideCopy;
-        });
-    });
-    const response = await fetch(`${API_URL}/course`, {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
-        body: JSON.stringify(courseDataTemp),
-    });
-}
+
+
+            await fetch(`${API_URL}/course`, {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'},
+                body: JSON.stringify(courseInEditTemp),
+            });
+        }
+    } catch (error) {
+        console.error(error)
+    }
+
+})
 export const getCourseById = createAsyncThunk<CourseModel, string>('course/getById', async (courseId) => {
     try {
         const response = await fetch(`${API_URL}/course/${courseId}`, {

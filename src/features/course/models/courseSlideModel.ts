@@ -8,8 +8,8 @@ export interface CourseSlideModel {
 export interface CourseSlideElementModel {
     uid: string;
     type: 'image' | 'text'
-    position: { x: number; y: number };
-    size: { width: number; height: number };
+    position?: { x: number; y: number };
+    size?: { width: number; height: number };
 
 }
 
