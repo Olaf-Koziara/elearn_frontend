@@ -8,15 +8,16 @@ import Column from "../../../../components/Column/Column";
 import Button from "../../../../components/Button/Button";
 import {createCourse,} from "../../actions/courseActions";
 import {useAppDispatch} from "../../../../store/store";
+import {useNavigate} from "react-router-dom";
 
 
 const CourseForm = () => {
     const {userInfo} = useSelector((state: any) => state.auth);
     const {register, handleSubmit} = useForm<CourseModel>()
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const onSubmit: SubmitHandler<CourseModel> = async (data: CourseModel) => {
-        console.log('create course')
         data.author = userInfo.email;
         data.createdAt = new Date().toString();
         const formData = new FormData();
@@ -27,13 +28,13 @@ const CourseForm = () => {
         if (data.thumbnail) {
             formData.append('thumbnail', data.thumbnail[0])
         }
-        dispatch(createCourse(formData))
-
-
+        dispatch(createCourse(formData)).unwrap().then((data) => {
+            navigate(`/courses/edit/${data._id}`)
+        })
     }
     return (
         <Row padding="t4" justifyContent="center">
-            <Column size={5}>
+            <Column size={3}>
                 <h2>Course</h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormField {...register('title')} placeholder="Title"/>

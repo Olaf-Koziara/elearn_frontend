@@ -1,17 +1,17 @@
 import React, {useEffect} from 'react';
-import FormField from "../../../components/FormField/FormField";
-import Button from "../../../components/Button/Button";
-import {useDispatch, useSelector} from "react-redux";
-import {loginUser, registerUser} from "../actions/authActions";
-import {useAppDispatch} from "../../../store/store";
-import Error from "../../../components/Error/Error";
+import FormField from "../../../../components/FormField/FormField";
+import Button from "../../../../components/Button/Button";
+import {useSelector} from "react-redux";
+import {loginUser, registerUser} from "../../actions/authActions";
+import {useAppDispatch} from "../../../../store/store";
+import Error from "../../../../components/Error/Error";
 import {SubmitErrorHandler, SubmitHandler, useForm} from "react-hook-form";
-import Loader from "../../../components/Loader/Loader";
+import Loader from "../../../../components/Loader/Loader";
 import {useNavigate} from "react-router-dom";
 
 
 type AuthFormProps = {
-    type: 'login' | 'register'; // Określa, czy jest to formularz logowania, czy rejestracji
+    type: 'login' | 'register';
 
 
 };
@@ -29,8 +29,7 @@ type LoginFormValues = {
 
 const AuthForm: React.FC<AuthFormProps> = ({type}) => {
     const {register, handleSubmit} = useForm<RegisterFormValues | LoginFormValues>();
-
-    const {loading, token, error, success, userInfo} = useSelector(
+    const {loading, error, userInfo} = useSelector(
         (state: any) => state.auth
     )
     const dispatch = useAppDispatch();
@@ -43,7 +42,6 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
 
     const onSubmit: SubmitHandler<RegisterFormValues | LoginFormValues> = (data: RegisterFormValues | LoginFormValues) => {
         if (type === "login") {
-            console.info('login')
             const formData = data as LoginFormValues;
             dispatch(loginUser({email: formData.email, password: formData.password}))
         } else {
@@ -108,7 +106,6 @@ const AuthForm: React.FC<AuthFormProps> = ({type}) => {
 
                     <Button
                         icon="door-open"
-
                         type="submit"
                         className="auth-button"
                     >{type === 'login' ? 'Login' : 'Register'}</Button>

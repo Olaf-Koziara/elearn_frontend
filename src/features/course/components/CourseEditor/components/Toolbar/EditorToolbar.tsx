@@ -3,25 +3,21 @@ import './EditorToolbar.scss';
 import {uid} from 'uid';
 import TextEditor from '../TextEditor/TextEditor';
 import {EditorToolbarLeftSide, EditorToolbarRightSide, EditorToolbarWrapper} from './style';
-import {RelativeWrapper} from '../../../../../../components/global/style';
-import {Dropdown, Modal} from '../../../../../../components/global';
-import {
-    CourseSlideElement,
-    CourseSlideElementImageModel,
-    CourseSlideElementModel
-} from "../../../../models/courseSlideModel";
+import {Dropdown} from '../../../../../../components/global';
+import {CourseSlideElementImageModel} from "../../../../models/courseSlideModel";
 import FormField from "../../../../../../components/FormField/FormField";
 import Button from "../../../../../../components/Button/Button";
-
-interface EditorToolbarProps {
-    handleAddElementToSlide: (item: CourseSlideElement) => void;
-    handleCourseSave: () => void;
-    handleCourseDelete?: (courseId?: string) => void;
-}
-
-const EditorToolbar = ({handleAddElementToSlide, handleCourseSave, handleCourseDelete}: EditorToolbarProps) => {
+import {deleteCourseById, saveCourse} from "../../../../actions/courseActions";
+import {useNavigate} from "react-router-dom";
+import {useAppDispatch} from "../../../../../../store/store";
+import {addElementToSlide, CourseState} from "../../../../reducer/courseSlice";
+import {useSelector} from "react-redux";
 
 
+const EditorToolbar = () => {
+    const navigate = useNavigate();
+    const {courseInEdit, loading} = useSelector((state: { course: CourseState }) => state.course);
+    const dispatch = useAppDispatch();
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = (e.target as HTMLInputElement).files?.item(0);
         if (file) {
@@ -33,10 +29,17 @@ const EditorToolbar = ({handleAddElementToSlide, handleCourseSave, handleCourseD
                 size: {width: 200, height: 200}, // Domyślny rozmiar obrazu
                 url: fileUrl
             };
-            handleAddElementToSlide(imageItem);
+            dispatch(addElementToSlide(imageItem));
         }
     };
+    const handleCourseSave = () => dispatch(saveCourse())
+    const handleCourseDelete = () => {
+        if (window.confirm('Confirm course delete')) {
+            courseInEdit?._id && dispatch(deleteCourseById(courseInEdit?._id));
+            navigate('/courses')
+        }
 
+    }
 
     return (
         <EditorToolbarWrapper>
@@ -48,17 +51,15 @@ const EditorToolbar = ({handleAddElementToSlide, handleCourseSave, handleCourseD
                 </Dropdown>
                 <Dropdown label={<i className="bi bi-fonts"/>} direction='up'>
                     <div className="editor-toolbar-texteditor_modal">
-                        <TextEditor handleAddElementToSlide={handleAddElementToSlide}/>
+                        <TextEditor/>
                     </div>
                 </Dropdown>
 
             </EditorToolbarLeftSide>
             <EditorToolbarRightSide>
                 <Button onClick={handleCourseSave}>Save</Button>
+                <Button onClick={handleCourseDelete}>Delete</Button>
 
-                <Modal onConfirmation={handleCourseDelete} label={<Button>Delete</Button>}>
-                    <h4>Confirm course delete</h4>
-                </Modal>
             </EditorToolbarRightSide>
         </EditorToolbarWrapper>
     );

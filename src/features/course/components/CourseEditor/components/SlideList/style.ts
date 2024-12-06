@@ -6,4 +6,10 @@ export const SlideListStyled = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${({theme}) => theme.spacing.md};
+  max-height: 50%;
+  overflow-y: scroll;
+
+  li {
+    cursor: pointer;
+  }
 `

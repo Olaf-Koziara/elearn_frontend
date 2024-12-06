@@ -1,53 +1,75 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {EditorContainer} from './style';
-
 import {uid} from "uid";
-import {CourseSlideElementModel, CourseSlideElementTextModel} from "../../../../models/courseSlideModel";
+import {CourseSlideElementTextModel} from "../../../../models/courseSlideModel";
 import FormField from "../../../../../../components/FormField/FormField";
+import {SlideElementContext} from "../SlideElement/SlideElement";
+import {useAppDispatch} from "../../../../../../store/store";
+import {addElementToSlide, updateSlideElementProperties} from "../../../../reducer/courseSlice";
 
 
 interface TextEditorProps {
-    handleAddElementToSlide: (item: CourseSlideElementTextModel) => void;
+    handleAddElementToSlide?: (text: TextEditorModel) => void;
+}
+
+interface TextEditorModel {
+    content: string;
+    fontSize: string;
+    fontFamily: string;
+    color: string;
 }
 
 const TextEditor: React.FC<TextEditorProps> = ({handleAddElementToSlide}) => {
-    const [textContent, setTextContent] = useState<string>('New Text');
-    const [textColor, setTextColor] = useState<string>('#000000');
-    const [fontSize, setFontSize] = useState<string>('16px');
-    const [fontFamily, setFontFamily] = useState<string>('Arial');
+    const textElement = useContext(SlideElementContext) as CourseSlideElementTextModel;
+    const [textElementInitial, setTextElementInitial] = useState(textElement);
+    const dispatch = useAppDispatch();
+    const [content, setContent] = useState<string>(textElement ? textElement.content : 'New Text');
+    const [color, setColor] = useState<string>(textElement ? textElement.color : '#000000');
+    const [fontSize, setFontSize] = useState<string>(textElement ? textElement.fontSize : '16px');
+    const [fontFamily, setFontFamily] = useState<string>(textElement ? textElement.fontFamily : 'Arial');
 
-    const handleAddText = () => {
+    useEffect(() => {
+        if (textElement) {
+            dispatch(updateSlideElementProperties({
+                uid: textElement.uid,
+                properties: {content, color, fontSize, fontFamily}
+            }))
+        }
+    }, [content, color, fontSize, fontFamily])
 
-        const textItem: CourseSlideElementTextModel = {
-            type: 'text',
+    const handleAddTextElement = () => {
+        const textElement: CourseSlideElementTextModel = {
             uid: uid(),
-            position: {x: 0, y: 0},
-            size: {width: 200, height: 50},
-            content: textContent,
+            type: 'text',
+            content,
             fontSize,
             fontFamily,
-            color: textColor
-        };
+            color,
 
-        handleAddElementToSlide(textItem);
+        };
+        dispatch(addElementToSlide(textElement))
     };
+    const handleTextChange = () => {
+
+    }
+
 
     return (
         <EditorContainer>
             <label>
                 Text Content:
-                <input
+                <FormField
                     type="text"
-                    value={textContent}
-                    onChange={(e) => setTextContent(e.target.value)}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
                 />
             </label>
             <label>
                 Text Color:
                 <input
                     type="color"
-                    value={textColor}
-                    onChange={(e) => setTextColor(e.target.value)}
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
                 />
             </label>
             <label>
@@ -72,7 +94,8 @@ const TextEditor: React.FC<TextEditorProps> = ({handleAddElementToSlide}) => {
                     <option value="Courier New">Courier New</option>
                 </select>
             </label>
-            <button onClick={handleAddText}>Add Text</button>
+            {textElement ? <button onClick={handleTextChange}>Save</button> :
+                <button onClick={handleAddTextElement}>Add Text</button>}
         </EditorContainer>
     );
 };
