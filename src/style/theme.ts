@@ -2,7 +2,8 @@ const theme = {
     colors: {
         primary: '#1D1D1F',      // Ciemnoszary dla głównego tekstu
         secondary: '#6E6E73',    // Jasnoszary na mniej ważne elementy tekstowe
-        background: '#F5F5F7',   // Bardzo jasny szary na tło
+        background: '#F5F5F7',
+        backgroundTransparent: '#F5F5F7C4',// Bardzo jasny szary na tło
         white: '#FFFFFF',        // Czysta biel na karty i modalne okna
         accent: '#0071E3',       // Niebieski akcent dla przycisków i linków
         border: '#D2D2D7',       // Kolor obramowań i linii rozdzielających

@@ -5,6 +5,11 @@ export const EditorContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
+  background-color: ${({theme}) => theme.colors.backgroundTransparent};
+  padding: ${({theme}) => theme.spacing.md};
+  border-radius: ${({theme}) => theme.borderRadius};
+  box-shadow: ${({theme}) => theme.boxShadow};
+
 
   label {
     display: flex;

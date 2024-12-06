@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {ToolbarWrapper} from './style';
+import {SlideElementContext} from "../../SlideElement";
+import TextEditor from "../../../TextEditor/TextEditor";
+import {CourseSlideElement, CourseSlideElementTextModel} from "../../../../../../models/courseSlideModel";
 
 const SlideElementToolbar = () => {
+    const element = useContext(SlideElementContext)
     return (
-        <ToolbarWrapper>
-
+        <ToolbarWrapper onClick={(e) => e.stopPropagation()}>
+            {element?.type === 'text' && <TextEditor/>}
         </ToolbarWrapper>
     );
 };

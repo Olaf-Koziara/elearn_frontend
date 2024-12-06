@@ -64,6 +64,7 @@ const fileLabelStyles = css<{ placeholder: string }>`
   box-shadow: none;
   transition: ${({theme}) => theme.transitions.default};
 
+
   &:after, &:before {
     display: block;
     transition: ${({theme}) => theme.transitions.default};
@@ -82,6 +83,7 @@ const fileLabelStyles = css<{ placeholder: string }>`
 
   .bi {
     transition: ${({theme}) => theme.transitions.default};;
+    font-size: 1.75em;
   }
 
 

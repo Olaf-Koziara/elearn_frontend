@@ -10,6 +10,7 @@ interface rowStyledProps {
 export const RowStyled = styled.div<rowStyledProps>`
   display: flex;
   margin: 0 -0.8rem;
+  width: 100%;
   justify-content: ${(props) => props.$justifyOption ?? 'start'};
   padding: ${({$padding, theme}) => $padding ? theme.spacing[$padding] : ''};
 

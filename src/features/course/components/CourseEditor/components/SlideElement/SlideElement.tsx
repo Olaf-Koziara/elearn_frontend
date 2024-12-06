@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import styled from 'styled-components';
+import React, {createContext, useEffect, useState} from 'react';
 import {
     CourseSlideElement,
     CourseSlideElementImageModel,
@@ -14,43 +13,53 @@ interface SlideElementProps {
     element: CourseSlideElement;
 }
 
+export const SlideElementContext = createContext<CourseSlideElementModel | null>(null);
 
-const SlideElement = ({element,}: SlideElementProps) => {
+const SlideElement = ({element}: SlideElementProps) => {
     const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+    useEffect(() => {
+        if (isToolbarVisible) {
+            document.addEventListener("click", handleToolbarClose);
+        } else {
+            document.removeEventListener("click", handleToolbarClose);
+        }
 
+        return () => {
+            document.removeEventListener("click", handleToolbarClose);
+        };
+    }, [isToolbarVisible]);
     const handleContextMenu = (e: React.MouseEvent) => {
         e.preventDefault();
         setIsToolbarVisible(!isToolbarVisible);
     };
 
+    const handleToolbarClose = (event: MouseEvent) => {
+        setIsToolbarVisible(false);
+    }
+
     const renderContent = () => {
         if (element.type === 'text') {
             let textElement = element as CourseSlideElementTextModel
-            return <p style={{fontSize: textElement.fontSize}}>{textElement.content}</p>;
+            const {fontSize, fontFamily, color, content} = textElement;
+            return <p style={{fontSize, color, fontFamily}}>{content}</p>;
         } else if (element.type === 'image') {
             let imageElement = element as CourseSlideElementImageModel;
             return <img src={imageElement.url} alt="" draggable={false} style={{width: "100%", height: "100%"}}/>;
         }
         return null;
     };
-    const handleClick = (event: React.MouseEvent) => {
-        setIsToolbarVisible(true);
-        document.addEventListener('click', handleToolbarClose)
-    }
-    const handleToolbarClose = (event: MouseEvent) => {
-        setIsToolbarVisible(false);
-        document.removeEventListener('click', handleToolbarClose);
-    }
+
 
     return (
+        <SlideElementContext.Provider value={element}>
+            <SlideElementWrapper $type={element.type} onContextMenu={handleContextMenu}>
 
-        <SlideElementWrapper onClick={handleClick} onContextMenu={handleContextMenu}>
-
-            {renderContent()}
-            {isToolbarVisible && (
-                <SlideElementToolbar/>
-            )}
-        </SlideElementWrapper>
+                {renderContent()}
+                {isToolbarVisible &&
+                    <SlideElementToolbar/>
+                }
+            </SlideElementWrapper>
+        </SlideElementContext.Provider>
 
     );
 };
